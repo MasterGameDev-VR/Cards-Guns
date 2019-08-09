@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "HitscanWeapon.h"
 #include "CardsAndGunsCharacter.generated.h"
 
 class UInputComponent;
@@ -18,12 +19,12 @@ class ACardsAndGunsCharacter : public ACharacter
 	class USkeletalMeshComponent* Mesh1P;
 
 	/** Gun mesh: 1st person view (seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USkeletalMeshComponent* FP_Gun;
+// 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+// 	class USkeletalMeshComponent* FP_Gun;
 
 	/** Location on gun mesh where projectiles should spawn. */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USceneComponent* FP_MuzzleLocation;
+// 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+// 	class USceneComponent* FP_MuzzleLocation;
 
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -53,17 +54,32 @@ public:
 	TSubclassOf<class ACardsAndGunsProjectile> ProjectileClass;
 
 	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-	class USoundBase* FireSound;
+// 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+// 	class USoundBase* FireSound;
 
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class UAnimMontage* FireAnimation;
 
+	UPROPERTY(EditDefaultsOnly, Category = Weapon)
+	TSubclassOf<class AHitscanWeapon> WeaponClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon)
+	AHitscanWeapon* Weapon;
+
 protected:
 	
 	/** Fires a projectile. */
 	void OnFire();
+
+	/** Stops firing. */
+	void StopFire();
+
+	/* Reloads weapon */
+	void ReloadWeapon();
+
+	/*Switches to automatic fire*/
+	void SwitchFireType();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);

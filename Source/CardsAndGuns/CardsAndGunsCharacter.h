@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "HitscanWeapon.h"
+#include "PatrolBot.h"
 #include "CardsAndGunsCharacter.generated.h"
 
 class UInputComponent;
@@ -64,6 +65,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Weapon)
 	TSubclassOf<class AHitscanWeapon> WeaponClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = HealearBot)
+	TSubclassOf<class AHealerBot> HealerClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = PatrolBot)
+	TSubclassOf<class APatrolBot> PatrolBotClass;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon)
 	AHitscanWeapon* Weapon;
 
@@ -80,6 +87,9 @@ protected:
 
 	/*Switches to automatic fire*/
 	void SwitchFireType();
+
+	/*Spawns an healer bot*/
+	void SpawnHealerBot();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);

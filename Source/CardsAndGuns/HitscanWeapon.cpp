@@ -84,7 +84,7 @@ void AHitscanWeapon::GenerateRayCast()
 
 		FCollisionQueryParams CollisionParams;
 
-		DrawDebugLine(GetWorld(), StartPosition, EndPosition, FColor::Red, false, 2, 0, 1);
+		DrawDebugLine(GetWorld(), StartPosition, EndPosition, FColor::Red, false, 2, 0, 1);		
 
 		if (GetWorld()->LineTraceSingleByChannel(Out, StartPosition, EndPosition, ECC_Visibility, CollisionParams))
 		{

@@ -10,6 +10,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
+#include "HealerBot.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -105,10 +106,14 @@ void ACardsAndGunsCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 
 	// Bind switchautomatic event
 	PlayerInputComponent->BindAction("SwitchAutomatic", IE_Pressed, this, &ACardsAndGunsCharacter::SwitchFireType);
+
+	// Bind SpawnHealerBot event
+	PlayerInputComponent->BindAction("SpawnHealerBot", IE_Pressed, this, &ACardsAndGunsCharacter::SpawnHealerBot);
 	
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACardsAndGunsCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACardsAndGunsCharacter::MoveRight);
+
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -117,6 +122,7 @@ void ACardsAndGunsCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 	PlayerInputComponent->BindAxis("TurnRate", this, &ACardsAndGunsCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &ACardsAndGunsCharacter::LookUpAtRate);
+
 }
 
 void ACardsAndGunsCharacter::OnFire()
@@ -139,9 +145,39 @@ void ACardsAndGunsCharacter::ReloadWeapon()
 	Weapon->Reload();
 }
 
+
+
 void ACardsAndGunsCharacter::SwitchFireType()
 {
 	Weapon->SwitchAutomatic();
+}
+
+void ACardsAndGunsCharacter::SpawnHealerBot()
+{
+	//TODO Forse è meglio spostarle nel beginplay? 
+	if (HealerClass == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Healer Class not found."));
+		return;
+	}
+
+	if (PatrolBotClass == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PatrolBot Class not found."));
+		return;
+	}
+	//
+
+	FVector HealerPosition = GetMesh()->GetComponentLocation();
+	FVector PatrolPosition = GetMesh()->GetComponentLocation();
+
+	HealerPosition.X += 20; //Meh
+	PatrolPosition.X += 20; //Garbage
+	PatrolPosition.Y += 20; //Garbage
+
+	GetWorld()->SpawnActor<AHealerBot>(HealerClass, HealerPosition, GetMesh()->GetComponentRotation());
+	GetWorld()->SpawnActor<APatrolBot>(PatrolBotClass, PatrolPosition, GetMesh()->GetComponentRotation());
+
 }
 
 void ACardsAndGunsCharacter::MoveForward(float Value)
